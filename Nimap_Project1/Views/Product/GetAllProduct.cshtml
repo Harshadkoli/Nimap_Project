@@ -1,0 +1,108 @@
+﻿@model Nimap_Project1.Models.ProductViewModel
+@{
+    ViewBag.Title = "GetAllProduct";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>GetAllProduct</h2>
+
+<style>
+    .pagination > li > a, .pagination > li > span {
+        position: relative;
+        float: left;
+        padding: 6px 12px;
+        margin-left: -1px;
+        line-height: 1.42857143;
+        color: #337ab7;
+        text-decoration: none;
+        background-color: #fff;
+        border: 1px solid #ddd;
+    }
+
+    .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+        z-index: 2;
+        color: #fff;
+        cursor: default;
+        background-color: #337ab7;
+        border-color: #337ab7;
+    }
+</style>
+
+<div class="col-12">
+    <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Data Table</h6>
+        @if (Convert.ToString(TempData["Message"]) != "")
+        {
+            <div class=" p-2 mb-2 bg-@TempData["Class"] text-white">@TempData["Message"]</div>
+        }
+        @if (Convert.ToString(TempData["DeleteMessage"]) != "")
+        {
+            <div class=" p-2 mb-2 bg-@TempData["Class"] text-white">@TempData["DeleteMessage"]</div>
+        }
+        <div class="table-responsive">
+            <table id="tbldata" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">ProductId</th>
+                        <th scope="col">ProductName</th>
+                        <th scope="col">CategoryId</th>
+                        <th scope="col">CategoryName</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListProduct)
+                    {
+                        <tr>
+                            <th scope="row">@item.ProductId</th>
+                            <td>@item.ProductName</td>
+                            <td>@item.CategoryId</td>
+                            <td>@item.CategoryName</td>
+                            <td><a class="btn btn-primary" href="@Url.Action("EditProduct","Product", new  { id = item.ProductId })">EDIT</a></td>
+                            <td><a class="btn btn-primary" href="@Url.Action("DeletePro","Product", new  { id = item.ProductId })">DELETE</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <!-- Paging -->
+            @if (Model.pager.EndPage > 1)
+            {
+                <ul class="pagination">
+                    <!--If Current page is not the First Page, we will show Button/Link to go First or on Previous page-->
+                    @if (Model.pager.CurrentPage > 1)
+                {
+                        <li>
+                            <a href="~/Product/GetAllProduct">First</a>
+                        </li>
+                        <li>
+                            <a href="~/Product/GetAllProduct?page=@(Model.pager.CurrentPage - 1)">Previous</a>
+                        </li>
+                    }
+                    <!--Paging from StartPage to the end Page-->
+                    @for (var page = Model.pager.StartPage; page <= Model.pager.EndPage; page++)
+                {
+                        <li class="@(page == Model.pager.CurrentPage ? "active" : "")">
+                            <a href="~/Product/GetAllProduct?page=@page">@page</a>
+                        </li>
+                    }
+                    <!--If Current Page is not the Last Page then show Next and Last Button/link on Paging-->
+                    @if (Model.pager.CurrentPage < Model.pager.TotalPages)
+                {
+                        <li>
+                            <a href="~/Product/GetAllProduct?page=@(Model.pager.CurrentPage + 1)">Next</a>
+                        </li>
+                        <li>
+                            <a href="~/Product/GetAllProduct?page=@(Model.pager.TotalPages)">Last</a>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+      
+    </div>
+</div>
+
+
+
+
